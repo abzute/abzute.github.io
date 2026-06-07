@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌸 Kawaii Start Page 🌸</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>૮ ˶ᵔ ᵕ ᵔ˶ ა Welcome Jack.</h1>
+        
+        <form class="search-bar" id="search-form">
+            <select id="search-engine" class="search-engine-select">
+                <option value="google">Google</option>
+                <option value="youtube">YouTube</option>
+                <option value="reddit">Reddit</option>
+            </select>
+            <input type="text" id="search-query" placeholder="Search the web... ✨" autofocus autocomplete="off" required>
+            <button type="submit">🔎</button>
+        </form>
+
+        <div class="bookmarks-header">
+            <h2>🌸 My Bookmarks 🌸</h2>
+            <button id="add-group-btn" class="btn">+ New Folder</button>
+        </div>
+        <div id="bookmarks-master-container"></div>
+
+        <div class="utilities">
+            
+            <a href="calendar.html" class="widget-card" title="Open Planner">
+                <h3>📅 Planner</h3>
+                <div class="widget-data-small" id="mini-month">MMM</div>
+                <div class="widget-data-large" id="mini-day">00</div>
+            </a>
+
+            <a href="clock.html" class="widget-card" title="Open Time Tools">
+                <h3>🕰️ Clock</h3>
+                <div class="widget-data-large" id="mini-clock">00:00</div>
+                <div class="widget-data-small" id="mini-ampm">AM</div>
+            </a>
+
+            <a href="calculator.html" class="widget-card" title="Open Calculator">
+                <h3>🧮 Calculator</h3>
+                <div class="widget-data-large" style="margin-top:5px;">✨</div>
+                <div class="widget-data-small" style="font-size:0.8em; margin-top:5px;">uwu</div>
+            </a>
+
+            <div class="widget-card notes-card">
+                <h3>📝 Quick Notes</h3>
+                <textarea id="notepad" placeholder="Jot things down here..."></textarea>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        /* --- Search Logic --- */
+        document.getElementById('search-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const query = encodeURIComponent(document.getElementById('search-query').value);
+            const engine = document.getElementById('search-engine').value;
+            let url = '';
+            if (engine === 'google') url = `https://www.google.com/search?q=${query}`;
+            else if (engine === 'youtube') url = `https://www.youtube.com/results?search_query=${query}`;
+            else if (engine === 'reddit') url = `https://www.reddit.com/search?q=${query}`;
+            window.location.href = url;
+        });
+
+        /* --- Mini Calendar Logic --- */
+        const dateObj = new Date();
+        document.getElementById('mini-month').innerText = dateObj.toLocaleString('default', { month: 'short' });
+        document.getElementById('mini-day').innerText = dateObj.getDate();
+
+        /* --- Mini Clock Logic --- */
+        function updateClock() {
+            const now = new Date();
+            let hours = now.getHours();
+            let minutes = now.getMinutes();
+            let ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12 || 12; 
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            document.getElementById('mini-clock').innerText = `${hours}:${minutes}`;
+            document.getElementById('mini-ampm').innerText = ampm;
+        }
+        setInterval(updateClock, 1000); updateClock();
+
+        /* --- Notepad Logic --- */
+        const notepad = document.getElementById('notepad');
+        notepad.value = localStorage.getItem('kawaiiNotes') || '';
+        notepad.addEventListener('input', () => localStorage.setItem('kawaiiNotes', notepad.value));
+
+        /* --- Bookmarks Logic --- */
+        const masterContainer = document.getElementById('bookmarks-master-container');
+        const kawaiiIcons = ['🌸', '🎀', '✨', '💖', '🍓', '🧁', '🧸', '☁️', '🐰', '🌷'];
+        let groupedBookmarks = JSON.parse(localStorage.getItem('kawaiiGroupedBookmarks'));
+        if (!groupedBookmarks || Object.keys(groupedBookmarks).length === 0) {
+            groupedBookmarks = { "Daily Links": [{ name: 'YouTube', url: 'https://youtube.com', icon: '🎀' }] };
+        }
+        function saveBookmarks() { localStorage.setItem('kawaiiGroupedBookmarks', JSON.stringify(groupedBookmarks)); }
+        function renderBookmarks() {
+            masterContainer.innerHTML = '';
+            for (const groupName in groupedBookmarks) {
+                const groupDiv = document.createElement('div');
+                groupDiv.className = 'group-container';
+                groupDiv.innerHTML = `
+                    <div class="group-header">
+                        <div class="group-title">📁 ${groupName}</div>
+                        <div class="group-actions"><button onclick="addBookmarkToGroup('${groupName}')">+ Add Link</button><button onclick="deleteGroup('${groupName}')">🗑️</button></div>
+                    </div>
+                `;
+                const grid = document.createElement('div');
+                grid.className = 'bookmarks-grid';
+                groupedBookmarks[groupName].forEach((bm, index) => {
+                    grid.innerHTML += `<a class="bookmark-card" href="${bm.url}"><div class="bookmark-icon">${bm.icon}</div><div class="bookmark-name">${bm.name}</div><button class="delete-btn" onclick="deleteBookmark(event, '${groupName}', ${index})" title="Delete">✖</button></a>`;
+                });
+                groupDiv.appendChild(grid); masterContainer.appendChild(groupDiv);
+            }
+        }
+        document.getElementById('add-group-btn').addEventListener('click', () => {
+            const groupName = prompt('New folder name? 🎀');
+            if (groupName && !groupedBookmarks[groupName]) { groupedBookmarks[groupName] = []; saveBookmarks(); renderBookmarks(); }
+        });
+        window.deleteGroup = function(groupName) { if (confirm(`Delete "${groupName}" folder? 🥺`)) { delete groupedBookmarks[groupName]; saveBookmarks(); renderBookmarks(); } }
+        window.addBookmarkToGroup = function(groupName) {
+            const name = prompt('Bookmark name? 🎀'); if (!name) return;
+            let url = prompt('URL? ✨'); if (!url) return;
+            if (!url.startsWith('http')) url = 'https://' + url;
+            groupedBookmarks[groupName].push({ name, url, icon: kawaiiIcons[Math.floor(Math.random() * kawaiiIcons.length)] });
+            saveBookmarks(); renderBookmarks();
+        }
+        window.deleteBookmark = function(event, groupName, index) {
+            event.preventDefault();
+            if (confirm('Delete this bookmark? 🥺')) { groupedBookmarks[groupName].splice(index, 1); saveBookmarks(); renderBookmarks(); }
+        }
+        renderBookmarks();
+    </script>
+</body>
+</html>

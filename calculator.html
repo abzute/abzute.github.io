@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌸 Kawaii Calculator 🌸</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container" style="max-width: 900px;">
+        <a href="index.html" class="btn" style="position: absolute; top: 20px; left: 20px;">❮ Back</a>
+        <h1>🧮 Math Magic!</h1>
+
+        <div class="calc-page-grid">
+            <div>
+                <div class="calc-display" id="calc-screen"></div>
+                <div class="calc-buttons">
+                    <button class="calc-btn op" onclick="appendCalc('sin(')">sin</button>
+                    <button class="calc-btn op" onclick="appendCalc('cos(')">cos</button>
+                    <button class="calc-btn op" onclick="appendCalc('tan(')">tan</button>
+                    <button class="calc-btn op" onclick="clearCalc()">AC</button>
+
+                    <button class="calc-btn op" onclick="appendCalc('sqrt(')">√</button>
+                    <button class="calc-btn op" onclick="appendCalc('^')">^</button>
+                    <button class="calc-btn op" onclick="appendCalc('(')">(</button>
+                    <button class="calc-btn op" onclick="appendCalc(')')">)</button>
+
+                    <button class="calc-btn" onclick="appendCalc('7')">7</button>
+                    <button class="calc-btn" onclick="appendCalc('8')">8</button>
+                    <button class="calc-btn" onclick="appendCalc('9')">9</button>
+                    <button class="calc-btn op" onclick="appendCalc('/')">÷</button>
+
+                    <button class="calc-btn" onclick="appendCalc('4')">4</button>
+                    <button class="calc-btn" onclick="appendCalc('5')">5</button>
+                    <button class="calc-btn" onclick="appendCalc('6')">6</button>
+                    <button class="calc-btn op" onclick="appendCalc('*')">×</button>
+
+                    <button class="calc-btn" onclick="appendCalc('1')">1</button>
+                    <button class="calc-btn" onclick="appendCalc('2')">2</button>
+                    <button class="calc-btn" onclick="appendCalc('3')">3</button>
+                    <button class="calc-btn op" onclick="appendCalc('-')">-</button>
+
+                    <button class="calc-btn" onclick="appendCalc('0')">0</button>
+                    <button class="calc-btn" onclick="appendCalc('.')">.</button>
+                    <button class="calc-btn eval" onclick="calculate()">=</button>
+                    <button class="calc-btn op" onclick="appendCalc('+')">+</button>
+                </div>
+            </div>
+
+            <div class="graphing-section">
+                <h3 style="margin-top:0; color: var(--text-main);">📈 Graphing ✨</h3>
+                <p style="font-size: 0.85em; margin: 0 0 10px 0;">Try: <code style="color:var(--text-main)">sin(x)</code>, <code style="color:var(--text-main)">x^2</code>, or <code style="color:var(--text-main)">cos(x)*x</code></p>
+                <div style="display:flex; width: 100%; gap:10px; align-items:center;">
+                    <strong style="color:var(--text-main); font-size:1.2em;">y =</strong>
+                    <input type="text" id="graph-eq" placeholder="e.g. sin(x)">
+                </div>
+                <canvas id="graph-canvas" width="300" height="300"></canvas>
+                <button class="btn" onclick="drawGraph()">Plot Graph</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* --- Calculator Logic --- */
+        const screen = document.getElementById('calc-screen');
+        
+        function appendCalc(val) { screen.innerText += val; }
+        function clearCalc() { screen.innerText = ''; }
+        
+        // Safely formats mathematical expressions (turns 'sin' into 'Math.sin' for the browser to read)
+        function formatMathString(str) {
+            return str.replace(/sin/g, 'Math.sin')
+                      .replace(/cos/g, 'Math.cos')
+                      .replace(/tan/g, 'Math.tan')
+                      .replace(/sqrt/g, 'Math.sqrt')
+                      .replace(/\^/g, '**'); 
+        }
+
+        function calculate() {
+            try {
+                let expression = formatMathString(screen.innerText);
+                let result = new Function('return ' + expression)();
+                // Round to 4 decimal places to prevent messy trailing numbers
+                screen.innerText = Math.round(result * 10000) / 10000;
+            } catch (error) {
+                screen.innerText = 'Error 🥺';
+                setTimeout(clearCalc, 1500);
+            }
+        }
+
+        /* --- Graphing Logic --- */
+        const canvas = document.getElementById('graph-canvas');
+        const ctx = canvas.getContext('2d');
+
+        function drawAxes() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.strokeStyle = '#ffe6ea'; ctx.lineWidth = 2;
+            
+            // Grid lines
+            for(let i = 0; i < 300; i += 30) {
+                ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, 300); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(300, i); ctx.stroke();
+            }
+
+            // Main Axes
+            ctx.strokeStyle = '#ffb7c5'; ctx.lineWidth = 3;
+            ctx.beginPath(); ctx.moveTo(0, 150); ctx.lineTo(300, 150); ctx.stroke(); // X
+            ctx.beginPath(); ctx.moveTo(150, 0); ctx.lineTo(150, 300); ctx.stroke(); // Y
+        }
+
+        function drawGraph() {
+            drawAxes();
+            const eqInput = document.getElementById('graph-eq').value;
+            if (!eqInput) return;
+
+            let mathString = formatMathString(eqInput);
+            
+            ctx.beginPath();
+            ctx.strokeStyle = '#ff6b81'; // Dark pink for the line
+            ctx.lineWidth = 3;
+
+            // Plot pixel by pixel
+            for (let px = 0; px <= canvas.width; px++) {
+                // Map screen pixel to graph coordinates (X goes from -10 to +10)
+                let x = (px - 150) / 15; 
+                try {
+                    // Create a safe, temporary math function
+                    let calculateY = new Function('x', 'return ' + mathString);
+                    let y = calculateY(x);
+                    
+                    // Map result back to screen pixels
+                    let py = 150 - (y * 15);
+                    
+                    if (px === 0) ctx.moveTo(px, py);
+                    else ctx.lineTo(px, py);
+                } catch (e) {
+                    break; // Stop drawing if equation is invalid
+                }
+            }
+            ctx.stroke();
+        }
+
+        // Draw initial empty axes on load
+        drawAxes();
+    </script>
+</body>
+</html>

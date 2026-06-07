@@ -1,0 +1,141 @@
+/* style.css */
+:root {
+    --bg-color: #ffeaea; 
+    --container-bg: #ffffff; 
+    --primary: #ffb7c5; 
+    --secondary: #ffc0cb; 
+    --text-main: #ff6b81; 
+    --text-dark: #8b5f65; 
+    --shadow: rgba(255, 182, 193, 0.4); 
+}
+
+* { box-sizing: border-box; }
+
+body {
+    font-family: 'Nunito', sans-serif; background-color: var(--bg-color);
+    background-image: radial-gradient(var(--primary) 2px, transparent 2px);
+    background-size: 30px 30px; color: var(--text-dark);
+    display: flex; justify-content: center; align-items: center;
+    min-height: 100vh; margin: 0; padding: 20px;
+}
+
+.container {
+    background-color: var(--container-bg); padding: 40px; border-radius: 30px;
+    box-shadow: 0 10px 30px var(--shadow); width: 100%; max-width: 850px;
+    border: 3px solid #fff4f6; position: relative;
+}
+
+h1 { color: var(--text-main); margin-top: 0; margin-bottom: 30px; font-size: 2.2em; text-align: center; letter-spacing: 1px; }
+h2 { color: var(--text-main); margin: 0; font-size: 1.5em; }
+
+/* --- General Buttons --- */
+.btn {
+    background-color: var(--primary); color: white; border: none; padding: 8px 15px;
+    border-radius: 20px; cursor: pointer; font-family: 'Nunito', sans-serif;
+    font-weight: 800; font-size: 0.9em; box-shadow: 0 4px 10px var(--shadow);
+    text-decoration: none; display: inline-block; transition: transform 0.2s, background 0.3s;
+}
+.btn:hover { transform: scale(1.05) translateY(-2px); background-color: var(--text-main); }
+
+/* --- Search Bar --- */
+.search-bar {
+    display: flex; margin-bottom: 40px; box-shadow: 0 6px 20px var(--shadow);
+    border-radius: 50px; overflow: hidden; border: 3px solid var(--primary); background: white; transition: transform 0.2s;
+}
+.search-bar:focus-within { transform: scale(1.02); border-color: var(--text-main); }
+.search-engine-select {
+    background-color: #fff4f6; color: var(--text-main); border: none; padding: 0 15px;
+    font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 1em; outline: none; cursor: pointer; border-right: 2px solid var(--primary);
+}
+.search-bar input { flex-grow: 1; padding: 15px 20px; border: none; outline: none; font-family: 'Nunito', sans-serif; font-size: 1.1em; color: var(--text-dark); background: transparent; }
+.search-bar input::placeholder { color: #ffb6c1; }
+.search-bar button { padding: 15px 30px; background-color: var(--primary); color: white; border: none; cursor: pointer; font-size: 1.2em; transition: background 0.3s ease; }
+.search-bar button:hover { background-color: var(--text-main); }
+
+/* --- Bookmarks --- */
+.bookmarks-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 0 10px; }
+.group-container { background: #fffafb; border: 2px dashed #ffe6ea; border-radius: 20px; padding: 20px; margin-bottom: 20px; }
+.group-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; border-bottom: 2px solid #ffe6ea; padding-bottom: 10px; }
+.group-title { font-size: 1.2em; font-weight: 800; color: var(--text-dark); }
+.group-actions button { background: none; border: none; cursor: pointer; font-size: 0.9em; font-weight: 700; color: var(--text-main); margin-left: 10px; transition: transform 0.2s; }
+.group-actions button:hover { transform: scale(1.1); }
+.bookmarks-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 15px; }
+.bookmark-card {
+    background-color: white; padding: 15px 10px; border-radius: 15px; text-decoration: none; color: var(--text-dark);
+    display: flex; flex-direction: column; align-items: center; position: relative;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.04); transition: transform 0.2s, box-shadow 0.2s; border: 2px solid #ffe6ea;
+}
+.bookmark-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px var(--shadow); border-color: var(--primary); }
+.bookmark-icon { font-size: 2em; margin-bottom: 5px; }
+.bookmark-name { font-size: 0.85em; font-weight: 700; text-align: center; word-break: break-word; }
+.delete-btn {
+    position: absolute; top: -8px; right: -8px; background-color: #ff6b81; color: white; border: 2px solid white;
+    border-radius: 50%; width: 24px; height: 24px; font-size: 10px; cursor: pointer; display: none;
+    align-items: center; justify-content: center; padding: 0; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: transform 0.2s;
+}
+.bookmark-card:hover .delete-btn { display: flex; }
+.delete-btn:hover { transform: scale(1.1); }
+
+/* --- Main Page Utilities Grid --- */
+.utilities {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;
+    margin-top: 30px; border-top: 3px solid #fff4f6; padding-top: 30px;
+}
+a.widget-card { text-decoration: none; color: inherit; cursor: pointer; transition: transform 0.2s; }
+a.widget-card:hover { transform: scale(1.05); border-color: var(--text-main); }
+.widget-card {
+    background-color: #fffafb; border: 2px solid #ffe6ea; border-radius: 20px; padding: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.03); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
+}
+.widget-card h3 { margin: 0 0 10px 0; color: var(--text-main); font-size: 1em; }
+.widget-data-large { font-size: 2em; font-weight: 800; line-height: 1.1; color: var(--text-dark); }
+.widget-data-small { font-size: 1.1em; font-weight: 800; color: var(--text-main); text-transform: uppercase; }
+
+.notes-card { grid-column: span 3; align-items: stretch; }
+textarea {
+    width: 100%; height: 100px; resize: none; border: 2px dashed #ffb7c5;
+    border-radius: 10px; padding: 10px; font-family: 'Nunito', sans-serif;
+    color: var(--text-dark); background: white; outline: none;
+}
+textarea:focus { border-color: var(--text-main); }
+
+/* --- Full Calendar Page --- */
+.calendar-header-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.calendar-header-nav button { background: var(--primary); color: white; border: none; padding: 10px 15px; border-radius: 50%; cursor: pointer; font-weight: bold; font-size: 1.2em;}
+.calendar-header-nav button:hover { background: var(--text-main); }
+.calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
+.day-name { text-align: center; font-weight: 800; color: var(--text-main); padding: 10px 0; }
+.calendar-cell { 
+    background: #fffafb; border: 2px solid #ffe6ea; border-radius: 10px; min-height: 80px; padding: 5px; 
+    cursor: pointer; transition: background 0.2s; position: relative; display: flex; flex-direction: column;
+}
+.calendar-cell:hover { background: white; border-color: var(--primary); }
+.calendar-cell.empty { background: transparent; border: none; cursor: default; }
+.cal-date-num { font-weight: 800; font-size: 0.9em; align-self: flex-end; color: var(--text-dark); margin-bottom: 5px;}
+.cal-event { background: var(--primary); color: white; font-size: 0.7em; padding: 3px 5px; border-radius: 5px; margin-bottom: 3px; font-weight: 700; text-align: left; word-break: break-word; }
+
+/* --- Clock & Timer Page --- */
+.time-page-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; text-align: center; margin-top: 20px;}
+.huge-time { font-size: 4em; font-weight: 800; color: var(--text-dark); margin: 20px 0; font-variant-numeric: tabular-nums; }
+.timer-controls { display: flex; justify-content: center; gap: 10px; }
+.timer-controls button { background: var(--primary); color: white; border: none; border-radius: 15px; padding: 10px 20px; font-weight: 800; font-size: 1.1em; cursor: pointer; transition: 0.2s; }
+.timer-controls button:hover { background: var(--text-main); transform: scale(1.05); }
+
+/* --- Calculator Page --- */
+.calc-page-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 30px; margin-top: 20px; }
+.calc-display { background: #fffafb; border: 3px solid var(--primary); padding: 15px 20px; border-radius: 15px; font-size: 1.8em; text-align: right; margin-bottom: 15px; font-family: monospace; color: var(--text-dark); height: 70px; overflow: hidden; word-wrap: break-word;}
+.calc-buttons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.calc-btn { background: var(--secondary); color: white; border: none; border-radius: 12px; padding: 15px; font-size: 1.2em; font-weight: 800; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+.calc-btn.op { background: var(--primary); }
+.calc-btn.eval { background: var(--text-main); grid-column: span 2; }
+.calc-btn:hover { transform: scale(1.05); filter: brightness(0.95); }
+
+.graphing-section { background: #fffafb; border: 2px dashed #ffe6ea; padding: 20px; border-radius: 20px; display: flex; flex-direction: column; align-items: center;}
+.graphing-section input { width: 100%; padding: 10px; border: 2px solid var(--primary); border-radius: 10px; margin-bottom: 15px; font-family: monospace; font-size: 1.1em; outline: none; }
+canvas { background: white; border: 2px solid var(--primary); border-radius: 10px; margin-bottom: 15px; max-width: 100%; }
+
+@media (max-width: 650px) {
+    .utilities { grid-template-columns: 1fr; }
+    .notes-card { grid-column: span 1; }
+    .time-page-grid, .calc-page-grid { grid-template-columns: 1fr; }
+}
